@@ -16,9 +16,12 @@ spec:
     spec:
       containers:
         - name: book-api
-          image: yklee2002/book-api
+          image: neithsan/book-api
           ports:
             - containerPort: 8080
+          env:
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
           resources:
             requests:
               cpu: "100m"
