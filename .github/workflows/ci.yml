@@ -41,7 +41,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Build for amd64 and arm64 (Apple Silicon); push only on main
+      # Build for amd64 and arm64 (Apple Silicon); push only on main.
+      # Each fork pushes to its own DOCKERHUB_USERNAME; 'local' keeps the tag
+      # valid where the secret is missing (e.g. pull requests from forks).
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -49,5 +51,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            neithsan/book-api:${{ github.sha }}
-            neithsan/book-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME || 'local' }}/book-api:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME || 'local' }}/book-api:latest
