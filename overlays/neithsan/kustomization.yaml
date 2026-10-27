@@ -1,0 +1,19 @@
+# Personal overlay for neithsan's local Docker Desktop cluster.
+# Shared files (base/, overlays/dev/) keep the upstream values; only this folder is personal.
+resources:
+  - ../dev
+
+images:
+  - name: yklee2002/book-api
+    newName: neithsan/book-api
+    newTag: latest
+
+patches:
+  # 30100 is already used by the mysql service in the default namespace
+  - target:
+      kind: Service
+      name: mysql
+    patch: |-
+      - op: replace
+        path: /spec/ports/0/nodePort
+        value: 30110
